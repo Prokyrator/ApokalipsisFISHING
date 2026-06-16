@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://t3w1ijkmfkn3"]
+
+[ext_resource type="Script" uid="uid://dovspev58jcvm" path="res://scripts/lake_scene.gd" id="1_31850"]
+
+[node name="LakeScene" type="Node2D" unique_id=1521009445]
+script = ExtResource("1_31850")
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1845003923]

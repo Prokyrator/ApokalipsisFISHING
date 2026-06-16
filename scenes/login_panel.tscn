@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://rhfbikw4o41o"]
+
+[ext_resource type="Script" uid="uid://bveuv584xntjc" path="res://scripts/login_panel.gd" id="1_qynjm"]
+
+[node name="LoginScene" type="Control" unique_id=1206267385]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_qynjm")

@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://dq3qney0s6fey"]
+
+[ext_resource type="Script" uid="uid://tiiig0bcos8l" path="res://scripts/interface_layer.gd" id="1_g82l2"]
+[ext_resource type="Script" uid="uid://b5yxr1j5fic0j" path="res://scripts/map_panel.gd" id="3_g82l2"]
+[ext_resource type="Script" uid="uid://7ecf6abgcp65" path="res://scripts/inventory_panel.gd" id="3_y4ggm"]
+[ext_resource type="Script" uid="uid://dq4ks2a08gii3" path="res://scripts/fishing_gear.gd" id="4_g82l2"]
+
+[node name="GlobalUi" type="Node2D" unique_id=609748645]
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=851758181]
+
+[node name="СлойИнтерфейса" type="Control" parent="UILayer" unique_id=1409220314]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_g82l2")
+
+[node name="СлойСнасти" type="Control" parent="UILayer" unique_id=626182721]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("4_g82l2")
+
+[node name="СлойИнвентаря" type="Control" parent="UILayer" unique_id=271211232]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_y4ggm")
+
+[node name="СлойКарты" type="Control" parent="UILayer" unique_id=2013854525]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_g82l2")

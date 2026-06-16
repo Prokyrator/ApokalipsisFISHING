@@ -1,0 +1,8 @@
+[
+	{"name": "Палка от швабры", "type": 0, "weight_limit": 1.0, "rarity": 1, "durability": 100, "max_durability": 100, "starter": true, "description": "Деревянная палка."},
+	{"name": "Самодельный ужас", "type": 1, "weight_limit": 1.0, "rarity": 1, "durability": 100, "max_durability": 100, "starter": true, "description": "Катушка из банки."},
+	{"name": "Нитки из трусов", "type": 2, "weight_limit": 1.0, "rarity": 1, "durability": 100, "max_durability": 100, "starter": true, "description": "Распущенные нитки."},
+	{"name": "Ржавый гвоздь", "type": 3, "weight_limit": 0.0, "rarity": 1, "durability": 100, "max_durability": 100, "snag_reduction": 0.10, "starter": true, "description": "Согнутый гвоздь."},
+	{"name": "Червяк дохлый", "type": 4, "weight_limit": 0.0, "rarity": 1, "durability": 0, "max_durability": 0, "quantity": 10, "bite_speed": 0.8, "description": "Уже не шевелится."},
+	{"name": "Садок на 20 рыб", "type": 5, "capacity": 20, "rarity": 1, "starter": true, "active": true, "description": "Вмещает 20 рыб."}
+]
