@@ -61,7 +61,7 @@ func _update_button_text(btn: Button, slot_index: int):
 
 func _on_quick_slot_pressed(slot_index: int):
 	if not GameData.is_slot_ready(slot_index):
-		var msg = get_node_or_null("/root/GlobalUi/UILayer/СлойСнасти/MessagePanel")
+		var msg = get_node_or_null("/root/GlobalUi/UILayer/MessagePanel")
 		if msg and msg.has_method("add_message"):
 			msg.add_message("Снасти не собраны.", 1)
 		return

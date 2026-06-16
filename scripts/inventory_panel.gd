@@ -144,7 +144,6 @@ func _populate_items():
 	for i in range(GameData.inventory.size()):
 		var item = GameData.inventory[i]
 		if item.get("type") != selected_category:
-			GlobalLogger.log("[Inventory] item: %s, type: %d" % [item.get("name"), item.get("type")])
 			continue
 		var slot = _create_item_slot(item)
 		content_box.add_child(slot)

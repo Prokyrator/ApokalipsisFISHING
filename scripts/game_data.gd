@@ -31,7 +31,7 @@ func _load_player_data():
 	var save_file = FileAccess.open(file_name, FileAccess.READ)
 	if save_file:
 		var json = JSON.parse_string(save_file.get_as_text())
-		if json:
+		if json is Dictionary:
 			inventory = json.get("inventory", [])
 			quick_slots = json.get("quick_slots", [])
 			active_slot = json.get("active_slot", -1)
@@ -43,7 +43,8 @@ func _load_player_data():
 			player_exp_to_level = json.get("player_exp_to_level", 100)
 			fish_cage = json.get("fish_cage", [])
 			cage_capacity = json.get("cage_capacity", 20)
-		save_file.close()
+		else:
+			GlobalLogger.log("[GameData] Ошибка чтения save-файла: некорректный JSON")
 	
 	if first_run or quick_slots.is_empty():
 		_give_starter_gear()
@@ -52,6 +53,12 @@ func _load_player_data():
 
 
 func _save_data():
+	var save_file = FileAccess.open(file_name, FileAccess.WRITE)
+	if save_file == null:
+		GlobalLogger.log("[GameData] Не удалось открыть save-файл на запись: %s" % file_name)
+		return
+	save_file.store_string(JSON.stringify(data, "\t"))
+	save_file.close()
 	var file_name = "user://save_%s.json" % current_player_name
 	var data = {
 		"inventory": inventory,

@@ -27,7 +27,7 @@ func _load_json(path: String, target: Array, name: String):
 func get_random_fish() -> Dictionary:
 	if fish_list.is_empty():
 		return {}
-	return fish_list[randi() % fish_list.size()]
+	return fish_list[randi() % fish_list.size()].duplicate(true)
 
 
 func get_fish_by_rarity(max_rarity: int) -> Dictionary:
@@ -35,7 +35,9 @@ func get_fish_by_rarity(max_rarity: int) -> Dictionary:
 	for fish in fish_list:
 		if fish["rarity"] <= max_rarity:
 			filtered.append(fish)
-	return filtered[randi() % filtered.size()] if not filtered.is_empty() else fish_list[0]
+	if not filtered.is_empty():
+		return filtered[randi() % filtered.size()].duplicate(true)
+	return fish_list[0].duplicate(true) if not fish_list.is_empty() else {}
 
 
 func generate_weight(fish: Dictionary) -> Dictionary:
