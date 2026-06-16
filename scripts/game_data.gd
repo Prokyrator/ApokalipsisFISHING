@@ -53,12 +53,6 @@ func _load_player_data():
 
 
 func _save_data():
-	var save_file = FileAccess.open(file_name, FileAccess.WRITE)
-	if save_file == null:
-		GlobalLogger.log("[GameData] Не удалось открыть save-файл на запись: %s" % file_name)
-		return
-	save_file.store_string(JSON.stringify(data, "\t"))
-	save_file.close()
 	var file_name = "user://save_%s.json" % current_player_name
 	var data = {
 		"inventory": inventory,
@@ -73,7 +67,12 @@ func _save_data():
 		"fish_cage": fish_cage,
 		"cage_capacity": cage_capacity
 	}
+
 	var save_file = FileAccess.open(file_name, FileAccess.WRITE)
+	if save_file == null:
+		GlobalLogger.log("[GameData] Не удалось открыть save-файл на запись: %s" % file_name)
+		return
+
 	save_file.store_string(JSON.stringify(data, "\t"))
 	save_file.close()
 
