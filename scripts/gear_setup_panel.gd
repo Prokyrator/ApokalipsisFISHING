@@ -216,16 +216,7 @@ func _format_item_text(item: Dictionary) -> String:
 
 func _on_close_pressed():
 	dropdown_popup.hide()
-	visible = false
-	var is_bunker = false
-	if get_tree().current_scene:
-		is_bunker = get_tree().current_scene.name == "BunkerScene"
-	if not is_bunker:
-		var fishing_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойСнасти")
-		if fishing_layer:
-			fishing_layer.visible = true
-			if fishing_layer.has_method("refresh_quick_buttons"):
-				fishing_layer.refresh_quick_buttons()
+	UIManager.toggle_gear_setup()
 	
 
 

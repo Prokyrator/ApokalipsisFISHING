@@ -17,11 +17,12 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GlobalUi="*uid://dq3qney0s6fey"
+GlobalLogger="*uid://cvjtr1fmdhgts"
 GameData="*uid://5lidyt7xoxjm"
 FishData="*uid://c1jlyoyetapg2"
-GlobalLogger="*uid://cvjtr1fmdhgts"
 ItemTooltip="*uid://cofyyt2roc2xg"
+UiManager="*uid://crd0a5bs8wqj1"
+GlobalUi="*uid://dq3qney0s6fey"
 
 [display]
 

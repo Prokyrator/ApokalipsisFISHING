@@ -150,9 +150,7 @@ func _show_greeting(name: String):
 	GameData._load_player_data()
 	
 	# Обновляем интерфейс
-	var interface_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойИнтерфейса")
-	if interface_layer and interface_layer.has_method("rebuild_player_info"):
-		interface_layer.call_deferred("rebuild_player_info")
+	UIManager.rebuild_player_info()
 
 
 func _on_login_pressed():

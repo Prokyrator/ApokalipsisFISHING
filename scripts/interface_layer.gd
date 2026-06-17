@@ -1,9 +1,6 @@
 extends Control
 
-var fishing_layer = null
-var inventory_layer = null
-var map_layer = null
-var gear_setup_layer = null
+
 var trader_panel = null
 var cage_panel = null
 
@@ -12,10 +9,7 @@ var cage_panel = null
 func _ready():
 	_build_top_panel()
 	_build_side_panels()
-	fishing_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойСнасти")
-	inventory_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойИнвентаря")
-	map_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойКарты")
-	gear_setup_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойСнастиНастройка")
+
 
 
 func _build_top_panel():
@@ -165,17 +159,6 @@ func _build_side_panels():
 		add_child(panel)
 
 
-func _toggle_quick_slots(visible_state: bool):
-	var is_bunker = false
-	if get_tree().current_scene:
-		is_bunker = get_tree().current_scene.name == "BunkerScene"
-	if is_bunker:
-		return  # В бункере никогда не показываем
-	var bar = get_node_or_null("/root/GlobalUi/UILayer/QuickSlotsBar")
-	if bar:
-		bar.visible = visible_state
-
-
 func rebuild_player_info():
 	var top_panel = get_node("ВерхняяПанель")
 	var info1 = top_panel.get_node("Info1")
@@ -191,63 +174,15 @@ func rebuild_player_info():
 
 
 func _on_top_button_pressed(button_name: String):
-	var is_bunker = false
-	if get_tree().current_scene:
-		is_bunker = get_tree().current_scene.name == "BunkerScene"
-	var inv = inventory_layer
-	var map_panel = map_layer
-	var gear_setup = gear_setup_layer
-	var trader_panel = get_node_or_null("/root/GlobalUi/UILayer/TraderPanel")
-	var cage_panel = get_node_or_null("/root/GlobalUi/UILayer/CagePanel")
-	
 	match button_name:
 		"САДОК":
-			if not cage_panel:
-				cage_panel = Control.new()
-				cage_panel.name = "CagePanel"
-				cage_panel.set_script(load("res://scripts/fish_cage_panel.gd"))
-				get_node("/root/GlobalUi/UILayer").add_child(cage_panel)
-			if inv: inv.visible = false
-			if map_panel: map_panel.visible = false
-			if gear_setup: gear_setup.visible = false
-			if trader_panel: trader_panel.visible = false
-			cage_panel.visible = !cage_panel.visible
-			cage_panel.z_index = 100
-			if cage_panel.visible and cage_panel.has_method("refresh"):
-				cage_panel.refresh()
-			_toggle_quick_slots(!cage_panel.visible)
+			UIManager.toggle_cage()
 		"ИНВЕНТАРЬ":
-			if inv:
-				if map_panel: map_panel.visible = false
-				if gear_setup: gear_setup.visible = false
-				if trader_panel: trader_panel.visible = false
-				if cage_panel: cage_panel.visible = false
-				inv.visible = !inv.visible
-				if inv.visible and inv.has_method("refresh"):
-					inv.refresh()
-				if fishing_layer and not is_bunker:
-					fishing_layer.visible = !inv.visible
-				_toggle_quick_slots(!inv.visible)
+			UIManager.toggle_inventory()
 		"КАРТА":
-			if map_panel:
-				if inv: inv.visible = false
-				if gear_setup: gear_setup.visible = false
-				if trader_panel: trader_panel.visible = false
-				if cage_panel: cage_panel.visible = false
-				map_panel.visible = !map_panel.visible
-				if fishing_layer and not is_bunker:
-					fishing_layer.visible = !map_panel.visible
-				_toggle_quick_slots(!map_panel.visible)
+			UIManager.toggle_map()
 		"СНАСТИ":
-			if gear_setup:
-				if inv: inv.visible = false
-				if map_panel: map_panel.visible = false
-				if trader_panel: trader_panel.visible = false
-				if cage_panel: cage_panel.visible = false
-				gear_setup.visible = !gear_setup.visible
-				gear_setup.z_index = 100
-				if gear_setup.visible and gear_setup.has_method("refresh"):
-					gear_setup.refresh()
+			UIManager.toggle_gear_setup()
 				
 				
 				

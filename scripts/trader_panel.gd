@@ -391,7 +391,7 @@ func _on_sell_pressed(index: int, price: int):
 
 
 func _on_close_pressed():
-	visible = false
+	UIManager.toggle_trader()
 
 
 func refresh():

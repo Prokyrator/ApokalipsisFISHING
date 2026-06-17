@@ -251,10 +251,7 @@ func _create_item_slot(item: Dictionary) -> Control:
 
 
 func _on_close_pressed():
-	visible = false
-	var fishing_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойСнасти")
-	if fishing_layer:
-		fishing_layer.visible = true
+	UIManager.toggle_inventory()
 
 
 func refresh():

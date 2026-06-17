@@ -76,25 +76,7 @@ func _build_interface():
 
 
 func _on_trader_pressed():
-	var trader_panel = get_node_or_null("/root/GlobalUi/UILayer/TraderPanel")
-	if not trader_panel:
-		trader_panel = Control.new()
-		trader_panel.name = "TraderPanel"
-		trader_panel.set_script(load("res://scripts/trader_panel.gd"))
-		get_node("/root/GlobalUi/UILayer").add_child(trader_panel)
-	trader_panel.visible = !trader_panel.visible
-	trader_panel.z_index = 100
-	if trader_panel.visible and trader_panel.has_method("refresh"):
-		trader_panel.refresh()
+	UIManager.toggle_trader()
 
 func _on_workbench_pressed():
-	var wb = get_node_or_null("/root/GlobalUi/UILayer/WorkbenchPanel")
-	if not wb:
-		wb = Control.new()
-		wb.name = "WorkbenchPanel"
-		wb.set_script(load("res://scripts/workbench_panel.gd"))
-		get_node("/root/GlobalUi/UILayer").add_child(wb)
-	wb.visible = !wb.visible
-	wb.z_index = 100
-	if wb.visible and wb.has_method("refresh"):
-		wb.refresh()
+	UIManager.toggle_workbench()

@@ -123,9 +123,7 @@ func add_fish_to_cage(fish_data: Dictionary) -> bool:
 		return false
 	fish_cage.push_back(fish_data)
 	_save_data()
-	var iface = get_node_or_null("/root/GlobalUi/UILayer/СлойИнтерфейса")
-	if iface and iface.has_method("update_cage_button"):
-		iface.update_cage_button()
+	UIManager.update_cage_button()
 	return true
 
 

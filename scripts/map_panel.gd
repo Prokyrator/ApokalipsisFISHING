@@ -116,10 +116,7 @@ func _on_location_pressed(loc: Dictionary):
 
 
 func _on_close_pressed():
-	visible = false
-	var fishing_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойСнасти")
-	if fishing_layer:
-		fishing_layer.visible = true
+	UIManager.toggle_map()
 
 
 func _show_confirm_dialog(loc: Dictionary):
@@ -206,7 +203,7 @@ func _on_confirm_yes(loc: Dictionary):
 	visible = false
 	
 	# Останавливаем все активные рыбалки
-	var fishing_gear = get_node_or_null("/root/GlobalUi/UILayer/СлойСнасти")
+	var fishing_gear = UIManager.get_fishing_layer()
 	if fishing_gear:
 		fishing_gear.minigame_ui.cleanup()
 		for gear in fishing_gear.active_gears:

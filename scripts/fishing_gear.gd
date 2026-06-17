@@ -9,10 +9,6 @@ var retry_timer: Timer
 
 var ui_layer: Node = null
 var quick_slots_bar_ref: Node = null
-var inventory_layer_ref: Node = null
-var map_layer_ref: Node = null
-var gear_setup_layer_ref: Node = null
-var cage_panel_ref: Node = null
 
 const ROD_SPACING = 60
 
@@ -21,11 +17,7 @@ func _ready():
 	GlobalLogger.log("=== FishingGear ready ===")
 	
 	ui_layer = get_node_or_null("/root/GlobalUi/UILayer")
-	quick_slots_bar_ref = get_node_or_null("/root/GlobalUi/UILayer/QuickSlotsBar")
-	inventory_layer_ref = get_node_or_null("/root/GlobalUi/UILayer/СлойИнвентаря")
-	map_layer_ref = get_node_or_null("/root/GlobalUi/UILayer/СлойКарты")
-	gear_setup_layer_ref = get_node_or_null("/root/GlobalUi/UILayer/СлойСнастиНастройка")
-	cage_panel_ref = get_node_or_null("/root/GlobalUi/UILayer/CagePanel")
+	quick_slots_bar_ref = UIManager.get_quick_slots_bar()
 
 	bite_system = Node.new()
 	bite_system.name = "BiteSystem"
@@ -100,7 +92,7 @@ func remove_gear_by_slot(slot_index: int):
 
 func _on_quick_slots_changed():
 	if quick_slots_bar_ref == null or not is_instance_valid(quick_slots_bar_ref):
-		quick_slots_bar_ref = get_node_or_null("/root/GlobalUi/UILayer/QuickSlotsBar")
+		quick_slots_bar_ref = UIManager.get_quick_slots_bar()
 	var quick_slots_bar = quick_slots_bar_ref
 	if quick_slots_bar and quick_slots_bar.has_method("refresh_buttons"):
 		quick_slots_bar.refresh_buttons()
@@ -249,26 +241,14 @@ func _input(event):
 		var active_gear = _get_active_gear()
 		if not active_gear:
 			return
-		var quick_slots_bar = get_node_or_null("/root/GlobalUi/UILayer/QuickSlotsBar")
+		var quick_slots_bar = UIManager.get_quick_slots_bar()
 		if _is_click_on_water(event.position) and not _is_click_on_rod(event.position):
 			if not quick_slots_bar or not _is_click_on_quick_buttons(event.position, quick_slots_bar):
 				_cast_float(active_gear, event.position)
 
 
 func _is_any_window_open() -> bool:
-	if inventory_layer_ref == null or not is_instance_valid(inventory_layer_ref):
-		inventory_layer_ref = get_node_or_null("/root/GlobalUi/UILayer/СлойИнвентаря")
-	if map_layer_ref == null or not is_instance_valid(map_layer_ref):
-		map_layer_ref = get_node_or_null("/root/GlobalUi/UILayer/СлойКарты")
-	if gear_setup_layer_ref == null or not is_instance_valid(gear_setup_layer_ref):
-		gear_setup_layer_ref = get_node_or_null("/root/GlobalUi/UILayer/СлойСнастиНастройка")
-	if cage_panel_ref == null or not is_instance_valid(cage_panel_ref):
-		cage_panel_ref = get_node_or_null("/root/GlobalUi/UILayer/CagePanel")
-
-	return (inventory_layer_ref and inventory_layer_ref.visible) \
-		or (map_layer_ref and map_layer_ref.visible) \
-		or (gear_setup_layer_ref and gear_setup_layer_ref.visible) \
-		or (cage_panel_ref and cage_panel_ref.visible)
+	return UIManager.is_any_window_open()
 
 
 func _is_click_on_rod(pos: Vector2) -> bool:
@@ -401,7 +381,7 @@ func _on_minigame_won(gear):
 		"mega": msg_type = 4
 		"boss": msg_type = 5
 	
-	var msg_panel = get_node_or_null("/root/GlobalUi/UILayer/MessagePanel")
+	var msg_panel = UIManager.get_message_panel()
 	if msg_panel and msg_panel.has_method("add_message"):
 		msg_panel.add_message(msg_text, msg_type)
 	
@@ -410,7 +390,7 @@ func _on_minigame_won(gear):
 
 
 func _on_minigame_lost(gear, reason):
-	var msg_panel = get_node_or_null("/root/GlobalUi/UILayer/MessagePanel")
+	var msg_panel = UIManager.get_message_panel()
 	if msg_panel and msg_panel.has_method("add_message"):
 		msg_panel.add_message(reason, 2)
 	_hide_float_and_line(gear)

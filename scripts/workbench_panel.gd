@@ -275,7 +275,7 @@ func _on_repair_all_pressed():
 
 
 func _on_close_pressed():
-	visible = false
+	UIManager.toggle_workbench()
 
 
 func refresh():
