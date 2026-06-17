@@ -181,7 +181,7 @@ func _add_gear(slot_index: int):
 func _on_rod_clicked(event: InputEvent, slot_index: int):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var gear = _find_gear_by_slot(slot_index)
-		if gear != null:
+		if gear != null and gear in active_gears:
 			_set_active_gear(gear)
 
 
@@ -302,6 +302,8 @@ func _cast_float(gear, target_pos: Vector2):
 	var line_node = gear.get("line")
 	if not float_node or not rod_node:
 		return
+	if not is_instance_valid(float_node) or not is_instance_valid(rod_node):
+		return
 	
 	gear["last_cast_pos"] = target_pos
 	float_node.visible = true
@@ -332,6 +334,8 @@ func _try_hook():
 	var active_gear = _get_active_gear()
 	if not active_gear:
 		return
+	if not active_gear in active_gears:
+		return
 	if active_gear.get("is_biting"):
 		bite_system.on_hook(active_gear)
 		return
@@ -361,6 +365,8 @@ func _on_bite_hooked(gear):
 
 func _on_bite_missed(gear):
 	_reset_float_color(gear)
+	if retry_timer.timeout.is_connected(_on_cast_complete):
+		return
 	retry_timer.timeout.connect(_on_cast_complete.bind(gear), CONNECT_ONE_SHOT)
 	retry_timer.start()
 

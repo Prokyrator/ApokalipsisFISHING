@@ -27,6 +27,7 @@ func _check_existing_user():
 
 
 func _build_window():
+
 	custom_minimum_size = Vector2(500, 350)
 	position = Vector2(390, 185)
 	
@@ -173,6 +174,11 @@ func _on_login_pressed():
 
 
 func _on_play_pressed():
+	var parent = get_parent()
+	if parent:
+		var bg = parent.get_node_or_null("LoginFullBg")
+		if bg:
+			bg.queue_free()
 	queue_free()
 	get_tree().change_scene_to_file("res://scenes/bunker.tscn")
 

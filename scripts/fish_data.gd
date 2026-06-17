@@ -41,6 +41,22 @@ func get_fish_by_rarity(max_rarity: int) -> Dictionary:
 
 
 func generate_weight(fish: Dictionary) -> Dictionary:
+	var rarity = fish.get("rarity", 1)
+	
+	# Бонус к шансам от редкости
+	var boss_bonus = 0.0
+	var mega_bonus = 0.0
+	var trophy_bonus = 0.0
+	match rarity:
+		2:
+			boss_bonus = 0.3
+			mega_bonus = 1.0
+			trophy_bonus = 3.0
+		3:
+			boss_bonus = 1.0
+			mega_bonus = 3.0
+			trophy_bonus = 5.0
+	
 	var roll = randf() * 100.0
 	var weight: float
 	var grade: String
@@ -49,18 +65,20 @@ func generate_weight(fish: Dictionary) -> Dictionary:
 	var w_range = w_max - w_min
 	var w_trophy = w_max + w_range * 0.5
 	var w_boss = w_max + w_range * 1.5
-	if roll < 0.2:
+	
+	if roll < 0.2 + boss_bonus:
 		weight = randf_range(w_boss, w_boss * 2.0)
 		grade = "boss"
-	elif roll < 1.0:
+	elif roll < 1.0 + mega_bonus:
 		weight = randf_range(w_trophy, w_boss)
 		grade = "mega"
-	elif roll < 6.0:
+	elif roll < 6.0 + trophy_bonus:
 		weight = randf_range(w_max, w_trophy)
 		grade = "trophy"
 	else:
 		weight = randf_range(w_min, w_max)
 		grade = "normal"
+	
 	return {"weight": snappedf(weight, 0.001), "grade": grade}
 
 

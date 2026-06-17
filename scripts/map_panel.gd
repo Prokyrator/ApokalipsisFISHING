@@ -208,10 +208,10 @@ func _on_confirm_yes(loc: Dictionary):
 	# Останавливаем все активные рыбалки
 	var fishing_gear = get_node_or_null("/root/GlobalUi/UILayer/СлойСнасти")
 	if fishing_gear:
+		fishing_gear.minigame_ui.cleanup()
 		for gear in fishing_gear.active_gears:
 			if gear and typeof(gear) == TYPE_DICTIONARY:
 				fishing_gear.bite_system.stop_bite_timer(gear)
-				fishing_gear.minigame_ui.cleanup(gear)
 		fishing_gear.active_gears.clear()
 	
 	get_tree().change_scene_to_file(loc["scene"])

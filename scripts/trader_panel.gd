@@ -3,7 +3,7 @@ extends Control
 var trader_inventory: Array = []
 var selected_category: int = 0
 var is_buy_mode: bool = true
-var tooltip: Control = null
+
 
 const MENU_WIDTH = 160
 const SLOT_HEIGHT = 55
@@ -241,17 +241,6 @@ func _populate_items():
 			content_box.add_child(slot)
 
 
-func _get_type_name(type: int) -> String:
-	match type:
-		GameData.GearType.ROD: return "Удилище"
-		GameData.GearType.REEL: return "Катушка"
-		GameData.GearType.LINE: return "Леска"
-		GameData.GearType.HOOK: return "Крючок"
-		GameData.GearType.BAIT: return "Наживка"
-		GameData.GearType.CAGE: return "Садок"
-		GameData.GearType.COMPONENT: return "Компонент"
-	return "?"
-
 
 func _create_buy_slot(item: Dictionary) -> Control:
 	var slot = Control.new()
@@ -363,80 +352,10 @@ func _create_sell_slot(index: int, item: Dictionary) -> Control:
 	btn.pressed.connect(_on_sell_pressed.bind(index, sell_price))
 	slot.add_child(btn)
 	
-	slot.mouse_entered.connect(_on_slot_mouse_entered.bind(item))
-	slot.mouse_exited.connect(_on_slot_mouse_exited)
+	slot.mouse_entered.connect(_on_slot_mouse_entered_new.bind(item))
+	slot.mouse_exited.connect(_on_slot_mouse_exited_new)
 	
 	return slot
-
-
-func _on_slot_mouse_entered(item: Dictionary):
-	if tooltip:
-		tooltip.queue_free()
-	
-	tooltip = Control.new()
-	tooltip.z_index = 200
-	
-	var rarity_color = GameData.get_rarity_color(item.get("rarity", 1))
-	var rarity_name = GameData.get_rarity_name(item.get("rarity", 1))
-	
-	var lines: Array = []
-	lines.append("[%s] %s" % [rarity_name, item.get("name", "???")])
-	lines.append(_get_type_name(item.get("type", 0)))
-	
-	if item.get("type") == GameData.GearType.HOOK:
-		lines.append("Срыв: -%d%%" % int(item.get("snag_reduction", 0.1) * 100))
-	elif item.get("type") == GameData.GearType.BAIT:
-		lines.append("Кол-во: %d" % item.get("quantity", 0))
-	elif item.get("type") == GameData.GearType.COMPONENT:
-		lines.append("Грейд: %s" % item.get("grade", "?"))
-	elif item.get("type") != GameData.GearType.CAGE:
-		lines.append("Вес: %.0f кг" % item.get("weight_limit", 0))
-	
-	if item.get("type") == GameData.GearType.CAGE:
-		lines.append("Вместимость: %d рыб" % item.get("capacity", 0))
-	
-	if item.get("max_durability", 0) > 0:
-		lines.append("Прочность: %d/%d" % [item.get("durability", 0), item.get("max_durability", 0)])
-	
-	lines.append(item.get("description", ""))
-	
-	var y_offset = 5.0
-	var line_height = 22.0
-	
-	var bg = ColorRect.new()
-	bg.color = Color(0.05, 0.05, 0.05, 0.95)
-	bg.size = Vector2(300, lines.size() * line_height + 10)
-	bg.position = Vector2.ZERO
-	tooltip.add_child(bg)
-	
-	var title_label = Label.new()
-	title_label.text = lines[0]
-	title_label.add_theme_color_override("font_color", rarity_color)
-	title_label.add_theme_font_size_override("font_size", 14)
-	title_label.position = Vector2(10, y_offset)
-	title_label.size = Vector2(280, line_height)
-	tooltip.add_child(title_label)
-	y_offset += line_height
-	
-	for i in range(1, lines.size()):
-		var info_label = Label.new()
-		info_label.text = lines[i]
-		info_label.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0, 1.0))
-		info_label.add_theme_font_size_override("font_size", 12)
-		info_label.position = Vector2(10, y_offset)
-		info_label.size = Vector2(280, line_height)
-		info_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-		tooltip.add_child(info_label)
-		y_offset += line_height
-	
-	tooltip.position = get_local_mouse_position() + Vector2(15, 15)
-	add_child(tooltip)
-
-
-func _on_slot_mouse_exited():
-	if tooltip:
-		tooltip.queue_free()
-		tooltip = null
 
 
 func _on_buy_pressed(item: Dictionary):
@@ -478,3 +397,10 @@ func _on_close_pressed():
 func refresh():
 	caps_label.text = "Мои крышечки: %d" % GameData.caps
 	_populate_items()
+
+
+func _on_slot_mouse_entered_new(item: Dictionary):
+	ItemTooltip.show_tooltip(self, item)
+
+func _on_slot_mouse_exited_new():
+	ItemTooltip.hide_tooltip(self)

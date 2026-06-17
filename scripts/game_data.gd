@@ -28,23 +28,32 @@ func _ready():
 
 func _load_player_data():
 	var file_name = "user://save_%s.json" % current_player_name
+	if not FileAccess.file_exists(file_name):
+		return
 	var save_file = FileAccess.open(file_name, FileAccess.READ)
-	if save_file:
-		var json = JSON.parse_string(save_file.get_as_text())
-		if json is Dictionary:
-			inventory = json.get("inventory", [])
-			quick_slots = json.get("quick_slots", [])
-			active_slot = json.get("active_slot", -1)
-			first_run = json.get("first_run", true)
-			caps = json.get("caps", 100)
-			mutagens = json.get("mutagens", 0)
-			player_level = json.get("player_level", 1)
-			player_exp = json.get("player_exp", 0)
-			player_exp_to_level = json.get("player_exp_to_level", 100)
-			fish_cage = json.get("fish_cage", [])
-			cage_capacity = json.get("cage_capacity", 20)
-		else:
-			GlobalLogger.log("[GameData] Ошибка чтения save-файла: некорректный JSON")
+	if save_file == null:
+		GlobalLogger.log("[GameData] Не удалось открыть save-файл: %s" % file_name)
+		return
+	var text = save_file.get_as_text()
+	save_file.close()
+	if text == null or text == "":
+		GlobalLogger.log("[GameData] Save-файл пуст: %s" % file_name)
+		return
+	var json = JSON.parse_string(text)
+	if json is Dictionary:
+		inventory = json.get("inventory", [])
+		quick_slots = json.get("quick_slots", [])
+		active_slot = json.get("active_slot", -1)
+		first_run = json.get("first_run", true)
+		caps = json.get("caps", 100)
+		mutagens = json.get("mutagens", 0)
+		player_level = json.get("player_level", 1)
+		player_exp = json.get("player_exp", 0)
+		player_exp_to_level = json.get("player_exp_to_level", 100)
+		fish_cage = json.get("fish_cage", [])
+		cage_capacity = json.get("cage_capacity", 20)
+	else:
+		GlobalLogger.log("[GameData] Ошибка чтения save-файла: некорректный JSON")
 	
 	if first_run or quick_slots.is_empty():
 		_give_starter_gear()
@@ -73,7 +82,9 @@ func _save_data():
 		GlobalLogger.log("[GameData] Не удалось открыть save-файл на запись: %s" % file_name)
 		return
 
-	save_file.store_string(JSON.stringify(data, "\t"))
+	var error = save_file.store_string(JSON.stringify(data, "\t"))
+	if error != OK:
+		GlobalLogger.log("[GameData] Ошибка записи save-файла: %s, код: %d" % [file_name, error])
 	save_file.close()
 
 
@@ -204,3 +215,20 @@ func get_rarity_name(rarity: int) -> String:
 		Rarity.EPIC: return "IV"
 		Rarity.LEGENDARY: return "V"
 	return "?"
+
+func get_fish_price(fish: Dictionary) -> int:
+	var w = fish.get("caught_weight", 0)
+	var g = fish.get("grade", "normal")
+	var r = fish.get("rarity", 1)
+	
+	var gm = 1.0
+	match g:
+		"boss": gm = 25.0
+		"mega": gm = 8.0
+		"trophy": gm = 3.0
+	
+	var rm = 1.0
+	if r == 2: rm = 3.0
+	elif r == 3: rm = 10.0
+	
+	return int(w * 5 * gm * rm)

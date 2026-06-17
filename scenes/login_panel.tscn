@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://rhfbikw4o41o"]
 
 [ext_resource type="Script" uid="uid://bveuv584xntjc" path="res://scripts/login_panel.gd" id="1_qynjm"]
+[ext_resource type="Texture2D" uid="uid://djfx2em3i27ux" path="res://assets/textures/backgrounds/login_bg.png" id="2_r3goa"]
 
 [node name="LoginScene" type="Control" unique_id=1206267385]
 layout_mode = 3
@@ -8,3 +9,12 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_qynjm")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1106732216]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_r3goa")

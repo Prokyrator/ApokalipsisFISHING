@@ -4,7 +4,7 @@ var scroll_container: ScrollContainer
 var content_box: VBoxContainer
 var item_slots: Array = []
 var selected_category: int = 0
-var tooltip: Control = null
+
 
 const SLOT_HEIGHT = 50
 const SLOT_GAP = 4
@@ -244,86 +244,10 @@ func _create_item_slot(item: Dictionary) -> Control:
 		dura_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(dura_label)
 	
-	slot.mouse_entered.connect(_on_slot_mouse_entered.bind(item))
-	slot.mouse_exited.connect(_on_slot_mouse_exited)
+	slot.mouse_entered.connect(_on_slot_mouse_entered_new.bind(item))
+	slot.mouse_exited.connect(_on_slot_mouse_exited_new)
 	
 	return slot
-
-
-func _get_type_name(type: int) -> String:
-	match type:
-		GameData.GearType.ROD: return "Удилище"
-		GameData.GearType.REEL: return "Катушка"
-		GameData.GearType.LINE: return "Леска"
-		GameData.GearType.HOOK: return "Крючок"
-		GameData.GearType.BAIT: return "Наживка"
-	return "?"
-
-
-func _on_slot_mouse_entered(item: Dictionary):
-	if tooltip:
-		tooltip.queue_free()
-	
-	tooltip = Control.new()
-	tooltip.z_index = 200
-	
-	var rarity_color = GameData.get_rarity_color(item.get("rarity", 1))
-	var rarity_name = GameData.get_rarity_name(item.get("rarity", 1))
-	
-	var lines: Array = []
-	lines.append("[%s] %s" % [rarity_name, item.get("name", "???")])
-	lines.append(_get_type_name(item.get("type", 0)))
-	
-	if item.get("type") == GameData.GearType.HOOK:
-		lines.append("Срыв: -%d%%" % int(item.get("snag_reduction", 0.1) * 100))
-	elif item.get("type") == GameData.GearType.BAIT:
-		lines.append("Кол-во: %d" % item.get("quantity", 0))
-		lines.append("Скорость: -%d%%" % int((1.0 - item.get("bite_speed", 1.0)) * 100))
-	else:
-		lines.append("Вес: %.0f кг" % item.get("weight_limit", 0))
-	
-	if item.get("max_durability", 0) > 0:
-		lines.append("Прочность: %d/%d" % [item.get("durability", 0), item.get("max_durability", 0)])
-	
-	lines.append(item.get("description", ""))
-	
-	var y_offset = 5.0
-	var line_height = 22.0
-	
-	var bg = ColorRect.new()
-	bg.color = Color(0.05, 0.05, 0.05, 0.95)
-	bg.size = Vector2(300, lines.size() * line_height + 10)
-	bg.position = Vector2.ZERO
-	tooltip.add_child(bg)
-	
-	var title_label = Label.new()
-	title_label.text = lines[0]
-	title_label.add_theme_color_override("font_color", rarity_color)
-	title_label.add_theme_font_size_override("font_size", 14)
-	title_label.position = Vector2(10, y_offset)
-	title_label.size = Vector2(280, line_height)
-	tooltip.add_child(title_label)
-	y_offset += line_height
-	
-	for i in range(1, lines.size()):
-		var info_label = Label.new()
-		info_label.text = lines[i]
-		info_label.add_theme_color_override("font_color", Color(1.0, 0.78, 0.0, 1.0))
-		info_label.add_theme_font_size_override("font_size", 12)
-		info_label.position = Vector2(10, y_offset)
-		info_label.size = Vector2(280, line_height)
-		info_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-		tooltip.add_child(info_label)
-		y_offset += line_height
-	
-	tooltip.position = get_local_mouse_position() + Vector2(15, 15)
-	add_child(tooltip)
-
-
-func _on_slot_mouse_exited():
-	if tooltip:
-		tooltip.queue_free()
-		tooltip = null
 
 
 func _on_close_pressed():
@@ -362,3 +286,9 @@ func _on_equip_cage_pressed(item: Dictionary):
 	var iface = get_node_or_null("/root/GlobalUi/UILayer/СлойИнтерфейса")
 	if iface and iface.has_method("update_cage_button"):
 		iface.update_cage_button()
+
+func _on_slot_mouse_entered_new(item: Dictionary):
+	ItemTooltip.show_tooltip(self, item)
+
+func _on_slot_mouse_exited_new():
+	ItemTooltip.hide_tooltip(self)

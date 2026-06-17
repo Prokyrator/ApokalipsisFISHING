@@ -14,7 +14,7 @@ const STAMINA_BAR_HEIGHT = 6
 const BAR_WIDTH = 300
 const BAR_HEIGHT = 20
 const CUT_HOLD_TIME = 2.0
-const B = 1.667
+const B = 1.667  # Базовая длительность заполнения шкалы (сек) при весе == лимиту и power == 1
 
 var rod_frame: Panel = null
 var rod_bar_bg: Panel = null
@@ -186,6 +186,8 @@ func _update_bars_display():
 
 
 func _process(_delta):
+	if _delta <= 0.0:
+		return
 	for slot in all_minigames.keys():
 		var mg = all_minigames[slot]
 		if mg.get("active"):
@@ -334,9 +336,12 @@ func _cleanup_slot(slot: int):
 	if current_slot == slot: _update_bars_display()
 
 
-func cleanup(gear):
-	if not gear: return
-	_cleanup_slot(gear.get("slot", -1))
+func cleanup(gear = null):
+	if gear:
+		_cleanup_slot(gear.get("slot", -1))
+	else:
+		for slot in all_minigames.keys():
+			_cleanup_slot(slot)
 	if all_minigames.is_empty() and bars_created:
 		for bar in [rod_frame, rod_bar_bg, rod_bar_fill, reel_frame, reel_bar_bg, reel_bar_fill]:
 			if bar: bar.visible = false

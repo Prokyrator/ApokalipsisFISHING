@@ -1,8 +1,21 @@
 extends Control
 
+var fishing_layer = null
+var inventory_layer = null
+var map_layer = null
+var gear_setup_layer = null
+var trader_panel = null
+var cage_panel = null
+
+
+
 func _ready():
 	_build_top_panel()
 	_build_side_panels()
+	fishing_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойСнасти")
+	inventory_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойИнвентаря")
+	map_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойКарты")
+	gear_setup_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойСнастиНастройка")
 
 
 func _build_top_panel():
@@ -181,10 +194,9 @@ func _on_top_button_pressed(button_name: String):
 	var is_bunker = false
 	if get_tree().current_scene:
 		is_bunker = get_tree().current_scene.name == "BunkerScene"
-	var fishing_layer = get_node_or_null("/root/GlobalUi/UILayer/СлойСнасти")
-	var inv = get_node_or_null("/root/GlobalUi/UILayer/СлойИнвентаря")
-	var map_panel = get_node_or_null("/root/GlobalUi/UILayer/СлойКарты")
-	var gear_setup = get_node_or_null("/root/GlobalUi/UILayer/СлойСнастиНастройка")
+	var inv = inventory_layer
+	var map_panel = map_layer
+	var gear_setup = gear_setup_layer
 	var trader_panel = get_node_or_null("/root/GlobalUi/UILayer/TraderPanel")
 	var cage_panel = get_node_or_null("/root/GlobalUi/UILayer/CagePanel")
 	
