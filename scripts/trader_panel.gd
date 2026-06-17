@@ -291,8 +291,8 @@ func _create_buy_slot(item: Dictionary) -> Control:
 	btn.pressed.connect(_on_buy_pressed.bind(item))
 	slot.add_child(btn)
 	
-	slot.mouse_entered.connect(_on_slot_mouse_entered.bind(item))
-	slot.mouse_exited.connect(_on_slot_mouse_exited)
+	slot.mouse_entered.connect(_on_slot_mouse_entered_new.bind(item))
+	slot.mouse_exited.connect(_on_slot_mouse_exited_new)
 	
 	return slot
 

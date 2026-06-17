@@ -4,6 +4,7 @@ enum GearType { ROD, REEL, LINE, HOOK, BAIT, CAGE, COMPONENT }
 enum Rarity { COMMON = 1, UNCOMMON = 2, RARE = 3, EPIC = 4, LEGENDARY = 5 }
 
 signal quick_slots_changed()
+signal fish_cage_changed()
 
 var inventory: Array = []
 var quick_slots: Array = []
@@ -123,7 +124,7 @@ func add_fish_to_cage(fish_data: Dictionary) -> bool:
 		return false
 	fish_cage.push_back(fish_data)
 	_save_data()
-	UIManager.update_cage_button()
+	fish_cage_changed.emit()
 	return true
 
 

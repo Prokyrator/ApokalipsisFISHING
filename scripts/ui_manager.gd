@@ -45,6 +45,7 @@ func _cache_all_panels():
 	message_panel = ui_layer.get_node_or_null("MessagePanel")
 	
 	GlobalLogger.log("[UIManager] Панели закэшированы")
+	GameData.fish_cage_changed.connect(_on_fish_cage_changed)
 
 
 ## Закрыть все панели кроме исключения
@@ -178,3 +179,6 @@ func is_any_window_open() -> bool:
 		if panel and is_instance_valid(panel) and panel.visible:
 			return true
 	return false
+
+func _on_fish_cage_changed():
+	update_cage_button()
